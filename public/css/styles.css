@@ -56,8 +56,14 @@ nav li{
     list-style: none;
 }
 
+nav li a{
+    color: white;
+    text-decoration: none;
+}
+
 h1,
-h2{
+h2,
+h3{
     font-size: 1.5rem;
     margin: 1rem 2rem;
 }
@@ -94,9 +100,8 @@ h2{
     cursor: pointer;
 }
 
-
 .reviwes ul{
-    margin: 0 3rem;
+    margin: 0 4rem;
 }
 
 .reviwes li{
@@ -140,6 +145,35 @@ h2{
     background: var(--bg-color);
 }
 
+#inv-display{
+    display: grid;
+    grid-template-columns: 50% 50%;
+    gap: 1rem;
+    max-width: 80%;
+    margin: 1rem auto;
+}
+
+#inv-display li{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid var(--bg-color);
+    padding: 1rem;
+    max-width: 300px;
+}
+
+#inv-display a{
+    text-decoration: none;
+    color: var(--bg-color);
+}
+
+#inv-display span{
+    font-weight: bold;
+    font-style: italic;
+
+}
 footer{
     display: flex;
     align-items: center;
@@ -162,7 +196,7 @@ footer{
         align-items: center;
         justify-content: center;
         background: white;
-        max-width: 550px;
+        width: 700px;
         padding: 1rem;
     }
 
