@@ -147,10 +147,11 @@ h3{
 
 #inv-display{
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 90%;
     gap: 1rem;
-    max-width: 80%;
+    max-width: 90%;
     margin: 1rem auto;
+    justify-content: center;
 }
 
 #inv-display li{
@@ -161,7 +162,8 @@ h3{
     text-align: center;
     border: 1px solid var(--bg-color);
     padding: 1rem;
-    max-width: 300px;
+    width: 100%;
+    border-radius: .5rem;
 }
 
 #inv-display a{
@@ -174,6 +176,38 @@ h3{
     font-style: italic;
 }
 
+#inv-display img{
+    max-width: 300px;
+}
+
+.details-view{
+    max-width: 90%;
+    margin: 0 auto 2rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.details-view span{
+    font-weight: bold;
+}
+
+.details-view h2{
+    margin: 1.5rem 0 .5rem 0;
+
+}
+
+#detailsPrice,
+#detailsColor{
+    background: #cee6ff;
+    padding: .5rem;
+}
+
+#detailsDescription,
+#detailsMiles{
+    padding: .5rem;
+}
+
 #error-title{
     text-align: center;
 }
@@ -183,6 +217,10 @@ h3{
     font-size: 1.2rem;
 }
 
+.namePrice hr{
+    max-width: 100%;
+}
+
 footer{
     display: flex;
     align-items: center;
@@ -190,13 +228,20 @@ footer{
     padding: 1rem;
 }
 
-@media screen and (min-width: 768px) {
+#errorLink{
+    width: 100%;
+    padding: 0rem 0rem 1rem 0rem;
+    text-align: center;
+}
+
+@media screen and (min-width: 700px) {
     body{
         display: flex;
         align-items: center;
         justify-content: center;
-        background: url('/images/site/checkerboard.jpg');
-        height: 200vh;
+        background: url('/images/site/small_check.png');
+        background-size: cover;
+        min-height: 130vh;
     }
 
     #wrapper{
@@ -205,11 +250,42 @@ footer{
         align-items: center;
         justify-content: center;
         background: white;
-        width: 700px;
+        width: 800px;
         padding: 1rem;
+        border: 1rem solid #174269;
     }
 
     .hero .hero-img{
         width: 550px;
     }
+
+    #inv-display{
+        grid-template-columns: 50% 50%;
+    }
+
+    .details-view{
+        display: grid;
+        grid-template-columns: 65% 35%;
+        grid-template-rows: repeat(4, auto);
+        align-items: center;
+    }
+
+    .details-view img{
+        grid-column: 1;
+        max-width: 100%;
+        grid-row: 1/span 4;
+    }
+
+    #detailsPrice,
+    #detailsColor,
+    #detailsDescription,
+    #detailsMiles,
+    #subTitle{
+        grid-column: 2;
+    }
+
+    #detailsMiles{
+        margin: 0;
+    }
+
 }
