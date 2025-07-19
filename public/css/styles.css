@@ -172,8 +172,17 @@ h3{
 #inv-display span{
     font-weight: bold;
     font-style: italic;
-
 }
+
+#error-title{
+    text-align: center;
+}
+
+#error-message{
+    text-align: center;
+    font-size: 1.2rem;
+}
+
 footer{
     display: flex;
     align-items: center;
