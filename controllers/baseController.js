@@ -1,6 +1,7 @@
 const utilities = require("../utilities/")
 const invModel = require("../models/inventory-model")
 
+
 const invCont = {}
 const baseController = {}
 

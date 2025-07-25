@@ -1,0 +1,21 @@
+<form class="account">
+    <h1><%- title %></h1>
+    <%- messages() %>
+    <% if (errors) { %>
+        <ul class="notice">
+            <% errors.array().forEach(error => { %>
+                <li><%= error.msg %></li>
+            <%  }) %>
+        </ul>
+    <% } %>
+    <label for="account_email">
+        Email:
+        <input type="email" name="account_email" id="account_email" placeholder="example@example.com" required>
+    </label>
+    <label for="account_password">
+        Password:
+        <input type="password" name="account_password" id="account_password" required>
+    </label>
+    <button class="account-btn"><%- title %></button>
+    <p>No account? <a href="/account/registration ">Sign-up</a></p>
+</form>
