@@ -10,30 +10,30 @@
     <% } %>
     <label for="account_firstname">
        First Name:
-        <input type="text" name="account_firstname" id="account_firstname" placeholder="John" required>
+        <input type="text" name="account_firstname" id="account_firstname" placeholder="John" required value="<%= locals.account_firstname %>">
     </label>
 
     <label for="account_lastname">
        First Name:
-        <input type="text" name="account_lastname" id="account_lastname" placeholder="Smith" required>
+        <input type="text" name="account_lastname" id="account_lastname" placeholder="Smith" required value="<%= locals.account_lastname %>">
     </label>
 
     <label for="account_email">
         Email Adress:
-        <input type="email" name="account_email" id="account_email" placeholder="example@example.com" required>
+        <input type="email" name="account_email" id="account_email" placeholder="example@example.com" required value="<%= locals.account_email %>">
     </label>
 
     <label for="account_password">
         Password:
         <input type="password" name="account_password" id="account_password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" required>
     </label>
-    <div id="patterns">
+    <div class="patterns hide">
         <ul>
-            <li>At least 12 characters</li>
-            <li>At least one number</li>
-            <li>One must be a lowercase letter</li>
-            <li>One must be a capital letter</li>
-            <li>One must be a special character</li>
+            <li id="charPattern">At least 12 characters</li>
+            <li id="numPattern">At least one number</li>
+            <li id="lowPattern">One must be a lowercase letter</li>
+            <li id="capPattern">One must be a capital letter</li>
+            <li id="spePattern">One must be a special character</li>
         </ul>
     </div>
     <button class="account-btn"><%- title %></button>
