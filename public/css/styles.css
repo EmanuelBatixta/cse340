@@ -2,6 +2,10 @@
 
 :root{
     --bg-color: #174269;
+    --btn-color: #364d65;
+    --btn-hover-color: #5b6b7c;
+    --valid-color: #d9ffea;
+    --invalid-color: #ffe2dc;
 }
 
 /******* Change Box Model ***************/
@@ -70,7 +74,7 @@ h3{
 
 #messages,
 .notice{
-    width: 70%;
+    width: 80%;
     margin: 0 auto;
     padding: .5rem;
     color: #ee4646;
@@ -234,7 +238,7 @@ h3{
     text-align: center;
 }
 
-.account{
+form{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -248,7 +252,7 @@ h3{
     gap: .5rem;
 }
 
-.account label{
+form label{
     display: flex;
     flex-direction: column;
     gap: .1rem;
@@ -256,7 +260,8 @@ h3{
     max-width: 85%;
 }
 
-.account input{
+form input,
+.newInventory textarea{
     font-size: 1.1rem;
     padding: .5rem;
     border-radius: .5rem;
@@ -264,36 +269,54 @@ h3{
     width: 100%;
 }
 
-.account-btn{
-    margin: 1rem;
+.newInventory select{
     padding: .5rem;
+    border-radius: .5rem;
+    font-size: 1.1rem;
+    border: none;
+}
+
+form button{
+    margin: 1rem;
+    padding: .7rem;
     border: none;
     border-radius: .5rem;
     background: #cee6ff;
-    width: 20%;
+    max-width: 35%;
+    width: 35%;
     cursor: pointer;
+    font-size: 1.1rem;
 }
 
-.account-btn:hover{
+form button:hover{
     background-color: #5b6b7c;
     color: white;
 }
 
-.account a{
+form a{
     color: #cee6ff;
 }
 
-.account #messages{
-    color:#d58c06;
-}
-
 input:required:invalid, input:focus:invalid {
-    background-color: 1px solid #eaa091;
+    background: var(--invalid-color);
 }
 
 input:required:valid {
-    background-color: 1px solid #98f5c0;
+    background: var(--valid-color);
 }
+
+.invManagement{
+    display: flex;
+    flex-direction: column;
+    margin: .5rem auto;
+    gap: .5rem;
+    max-width: 80%;
+}
+
+.invManagement a{
+    color: var(--bg-color);
+}
+
 
 #footer{
     margin-top: .5rem;
@@ -320,9 +343,13 @@ footer{
 }
 
 .patterns{
-    width: 75%;
+    width: 78%;
     text-align: left;
     margin-top: .5rem;
+}
+
+.validPattrrn{
+    color: #98f5c0;
 }
 
 @media screen and (min-width: 750px) {

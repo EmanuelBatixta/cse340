@@ -1,0 +1,16 @@
+<form action="/inv/new/classification" method="post" class="newClassification">
+    <h1><%- title %></h1>
+    <%- messages() %>
+    <% if (errors) { %>
+        <ul class="notice">
+            <% errors.array().forEach(error => { %>
+                <li><%= error.msg %></li>
+            <%  }) %>
+        </ul>
+    <% } %>
+    <label for="classification_name">
+        Classification name:
+        <input type="text" name="classification_name" id="classification_name" required value="<%= locals.classification_name %>" pattern="^[A-Za-zÀ-ÿ\s]+$" placeholder="Oly letters and spaces pleace">
+    </label>
+    <button class="add-btn"><%- title %></button>
+</form>
