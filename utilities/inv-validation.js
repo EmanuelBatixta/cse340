@@ -67,6 +67,9 @@ validate.invRules = () => {
             .isString()
             .isLength({min: 3})
             .withMessage("A valid description is required."),
+
+        body("inv_id")
+            .isInt()
     ]
 }
 
@@ -84,6 +87,35 @@ validate.checkInvData = async (req, res, next) => {
             classification,
             inv_image: inv_image ||'/images/vehicles/no-image.png',
             inv_thumbnail: inv_thumbnail || '/images/vehicles/no-image.png',
+            inv_price,
+            inv_miles,
+            inv_color,
+            inv_description,
+            inv_year,
+            inv_make,
+            inv_model,
+            classification_id
+    })
+    return
+  }
+  next()
+}
+
+validate.checkUpdateData = async (req, res, next) => {
+  const { classification_id, inv_make, inv_model, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, inv_description, inv_year, inv_id } = req.body
+  let errors = []
+  let classification = await utilities.buildClassificationList()
+  errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    res.render("./inventory/edit-inventory",{
+            title: `Edit ${inv_make} ${inv_model}`,
+            nav,
+            errors,
+            classification,
+            inv_id,
+            inv_image,
+            inv_thumbnail,
             inv_price,
             inv_miles,
             inv_color,

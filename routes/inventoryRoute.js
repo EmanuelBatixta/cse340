@@ -6,20 +6,24 @@ const utilities = require("../utilities/index.js")
 const invValidate = require("../utilities/inv-validation.js")
 
 
-router.get("/type/:classificationId", utilities.handleErrors(invController.invCont.buildByClassificationId));
+router.get("/type/:classificationId", utilities.handleErrors(invController.buildByClassificationId));
 
-router.get("/detail/:inv_id", utilities.handleErrors(invController.invCont.buildDetailsById));
+router.get("/detail/:inv_id", utilities.handleErrors(invController.buildDetailsById));
 
-router.get("/", utilities.handleErrors(invController.invCont.buildIndex));
+router.get("/", utilities.handleErrors(invController.buildManagement));
 
-router.get("/new/classification", utilities.handleErrors(invController.invCont.buildNewClassification));
+router.get("/new/classification", utilities.handleErrors(invController.buildNewClassification));
 
-router.get("/new/inventory", utilities.handleErrors(invController.invCont.buildNewInventory));
+router.get("/new/inventory", utilities.handleErrors(invController.buildNewInventory));
+
+router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON))
+
+router.get("/edit/:inv_id", utilities.handleErrors(invController.buildEdit)) // create a edit view
 
 router.post("/new/inventory",
     invValidate.invRules(),
     invValidate.checkInvData,
-    utilities.handleErrors(invController.addInventory)
+    utilities.handleErrors (invController.addInventory)
 )
 
 router.post("/new/classification",
@@ -27,5 +31,12 @@ router.post("/new/classification",
     invValidate.checkClassData,
     utilities.handleErrors(invController.addClassification)
 )
+
+router.post("/update/",
+    invValidate.invRules(),
+    invValidate.checkUpdateData,
+    utilities.handleErrors(invController.updateInventory)
+)
+
 
 module.exports = router;

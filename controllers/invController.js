@@ -34,11 +34,14 @@ invCont.buildDetailsById = async function (req, res, next) {
     })
 }
 
-invCont.buildIndex = async function (req, res, next) {
+invCont.buildManagement = async function (req, res, next) {
     let nav = await utilities.getNav()
+    const classification = await utilities.buildClassificationList()
+
     res.render("./inventory/management",{
         title: 'Vehicle Management',
         nav,
+        classification,
         errors: null,
     })
 }
@@ -67,7 +70,7 @@ invCont.buildNewClassification = async function (req, res, next) {
     })
 }
 
-async function addInventory(req, res) {
+invCont.addInventory = async function (req, res) {
     let nav = await utilities.getNav()
     const { classification_id, inv_make, inv_model, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, inv_description, inv_year } = req.body
 
@@ -117,7 +120,55 @@ async function addInventory(req, res) {
     }
 }
 
-async function addClassification (req, res) {
+/* ***************************
+ *  Update Inventory Data
+ * ************************** */
+invCont.updateInventory = async function (req, res, next) {
+  let nav = await utilities.getNav()
+  const {
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+    classification_id,
+  } = req.body
+  const updateResult = await invModel.updateInventory( inv_id, inv_make, inv_model, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, inv_description, inv_year, classification_id )
+
+  if (updateResult) {
+    const itemName = updateResult.inv_make + " " + updateResult.inv_model
+    req.flash("notice", `The ${itemName} was successfully updated.`)
+    res.redirect("/inv/")
+  } else {
+    const classification = await utilities.buildClassificationList(classification_id)
+    const itemName = `${inv_make} ${inv_model}`
+    req.flash("notice", "Sorry, the insert failed.")
+    res.status(501).render("inventory/edit-inventory", {
+    title: "Edit " + itemName,
+    nav,
+    classification,
+    errors: null,
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color,
+    classification_id
+    })
+  }
+}
+
+invCont.addClassification = async function (req, res) {
     const { classification_name } = req.body
 
     const addResult = await invModel.addClassification(classification_name)
@@ -143,4 +194,48 @@ async function addClassification (req, res) {
     }
 }
 
-module.exports = { invCont, addClassification, addInventory }
+/* ***************************
+ *  Return Inventory by Classification As JSON
+ * ************************** */
+invCont.getInventoryJSON = async (req, res, next) => {
+  const classification_id = parseInt(req.params.classification_id)
+  const invData = await invModel.getInventoryByClassificationId(classification_id)
+  if (invData[0].inv_id) {
+    return res.json(invData)
+  } else {
+    next(new Error("No data returned"))
+  }
+}
+
+/* ***************************
+ * Return The Edit View
+ * ************************** */
+invCont.buildEdit = async (req, res, next) => {
+    let nav = await utilities.getNav()
+    const inventory_id = parseInt(req.params.inv_id)
+    const data = await invModel.getDetailsById(inventory_id)
+    const itemName = `${data[0].inv_make} ${data[0].inv_model}`
+
+    let classification = await utilities.buildClassificationList(data[0].classification_id)
+
+    console.log(data[0].inv_description)
+    res.render("./inventory/edit-inventory", {
+        title: `Edit ${itemName}`,
+        nav,
+        errors: null,
+        classification,
+        inv_id: inventory_id,
+        inv_make: data[0].inv_make,
+        inv_model: data[0].inv_model,
+        inv_year: data[0].inv_year,
+        inv_description: data[0].inv_description,
+        inv_image: data[0].inv_image,
+        inv_thumbnail: data[0].inv_thumbnail,
+        inv_price: data[0].inv_price,
+        inv_miles: data[0].inv_miles,
+        inv_color: data[0].inv_color,
+        classification_id: data[0].classification_id
+    })
+}
+
+module.exports = invCont
