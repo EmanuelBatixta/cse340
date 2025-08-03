@@ -238,4 +238,42 @@ invCont.buildEdit = async (req, res, next) => {
     })
 }
 
+invCont.buildDelete = async function (req, res, next) {
+    let nav = await utilities.getNav()
+    const { inv_id } = req.params
+    const data = await invModel.getDetailsById(inv_id)
+    res.render("./inventory/delete-confirm", {
+        title: 'Confirm Deletion',
+        nav,
+        errors: null,
+        inv_id,
+        inv_make: data[0].inv_make,
+        inv_model: data[0].inv_model,
+        inv_year: data[0].inv_year
+    })
+}
+
+invCont.deleteInventory = async function (req, res, next) {
+  let nav = await utilities.getNav()
+  const { inv_id, inv_make, inv_model, inv_year } = req.body
+  const deleteResult = await invModel.deleteInventory( inv_id )
+
+  if (deleteResult) {
+        const itemName = inv_make + " " + inv_model
+        req.flash("notice", `The ${itemName} was successfully delete.`)
+        res.redirect("/inv/")
+  } else {
+        req.flash("notice", "Sorry, the delete failed.")
+        res.status(501).render("./inventory/delete-confirm", {
+        title: "Confirm Deletion",
+        nav,
+        errors: null,
+        inv_id,
+        inv_make,
+        inv_model,
+        inv_year
+    })
+  }
+}
+
 module.exports = invCont

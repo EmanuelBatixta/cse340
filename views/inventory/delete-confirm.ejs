@@ -1,0 +1,28 @@
+<form action="/inv/delete/" method="post" class="deleteInventory">
+    <h1><%- title %></h1>
+    <%- messages() %>
+    <% if (errors) { %>
+        <ul class="notice">
+            <% errors.array().forEach(error => { %>
+                <li><%= error.msg %></li>
+            <%  }) %>
+        </ul>
+    <% } %>
+    <label for="inv_make">
+        Make:
+        <input type="text" name="inv_make" id="inv_make" required value="<%- inv_make %>" readonly>
+    </label>
+    <label for="inv_model">
+        Model:
+        <input type="text" name="inv_model" id="inv_model" required value="<%- inv_model %>" readonly>
+    </label>
+    <label for="inv_year">
+        Year:
+        <input type="number" name="inv_year" id="inv_year" required value="<%- inv_year %>" readonly>
+    </label>
+    <p>Confirm Deletion - The delete is permanent.</p>
+    <button class="delete-btn" ><%- title %></button>
+    <input type="hidden" name="inv_id"
+    <% if(locals.inv_id) { %> value="<%= locals.inv_id %>"
+    <% } %>>
+</form>

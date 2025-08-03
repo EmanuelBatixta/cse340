@@ -67,9 +67,6 @@ validate.invRules = () => {
             .isString()
             .isLength({min: 3})
             .withMessage("A valid description is required."),
-
-        body("inv_id")
-            .isInt()
     ]
 }
 
