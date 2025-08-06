@@ -4,13 +4,6 @@ const utilities = require("../utilities/index.js")
 const ctrl = require("../controllers/accountController")
 const regValidate = require('../utilities/account-validation')
 
-
-router.get("/",
-    utilities.checkLogin,
-    utilities.handleErrors(ctrl.buildAccountManagement)
-)
-
-
 router.get("/login", utilities.handleErrors(ctrl.buildLogin))
 
 router.get("/register", utilities.handleErrors(ctrl.buildRegister))
@@ -26,6 +19,26 @@ router.post("/login",
     regValidate.checkLoginData,
     ctrl.accountLogin,
     utilities.handleErrors(ctrl.accountLogin)
+)
+
+router.use(utilities.checkLogin)
+
+router.get("/", utilities.handleErrors(ctrl.buildAccountManagement))
+
+router.get("/management/:account_id", utilities.handleErrors(ctrl.buildEdit))
+
+router.post("/edit/",
+    regValidate.editAccountRules,
+    utilities.handleErrors(ctrl.editAccount)
+)
+
+router.post("/edit/password",
+    regValidate.editPasswordRules,
+    utilities.handleErrors(ctrl.editPassword)
+)
+
+router.get("/loggout",
+    utilities.handleErrors(ctrl.loggout)
 )
 
 module.exports = router

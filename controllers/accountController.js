@@ -128,4 +128,111 @@ async function buildAccountManagement(req, res) {
     })
 }
 
-module.exports = { buildLogin, buildRegister, registerAccount, accountLogin, buildAccountManagement }
+async function buildEdit(req, res) {
+    let nav = await utilities.getNav()
+
+    res.render("./account/edit", {
+        title: 'Edit Account',
+        nav,
+        errors: null,
+    })
+}
+
+async function editAccount(req, res) {
+    let nav = await utilities.getNav()
+    const { account_firstname, account_lastname, account_email, account_id } = req.body
+
+    if(!accountModel.getAccountByEmail(account_email)){
+        const editResult = await accountModel.updateAccount(account_id, account_firstname, account_lastname, account_email)
+
+        if(editResult){
+        req.flash('notice', 'Account edited sucessfully.')
+        res.status(201).render("./account/", {
+            title: 'Account Management',
+            nav,
+            errors: null,
+        })
+        } else {
+            req.flash('notice', 'Failed edit account.')
+            res.status(500).render("./account/", {
+                title: 'Edit account',
+                nav,
+                errors: null,
+            })
+        }
+
+    } else {
+
+        req.flash('notice', 'Failed edit account.')
+        res.status(500).render("./account/", {
+            title: 'Edit account',
+            nav,
+            errors: null,
+        })
+    }
+
+}
+
+async function editPassword(req, res) {
+    let nav = await utilities.getNav()
+    const { account_password, account_id } = req.body
+
+    let hashedPassword
+    try {
+        // regular password and cost (salt is generated automatically)
+        hashedPassword = await bcrypt.hashSync(account_password, 10)
+    } catch (error) {
+        req.flash("notice", 'Sorry, there was an error processing the registration.')
+        res.status(500).render("./account/register", {
+        title: "Register",
+        nav,
+        errors: null,
+        })
+    }
+
+    const editResult = await accountModel.updatePasswod(account_id, hashedPassword)
+
+    if(editResult){
+        req.flash('notice', 'Password edited sucessfully.')
+        res.status(201).render("./account/management", {
+            title: 'Account Management',
+            nav,
+            errors: null,
+        })
+    } else {
+        req.flash('notice', 'Failed edit password.')
+        res.status(500).render("./account/edit", {
+            title: 'Edit account',
+            nav,
+            errors: null,
+        })
+    }
+}
+
+async function loggout(req, res) {
+    let nav = await utilities.getNav()
+
+    if(process.env.NODE_ENV === 'development'){
+        res.clearCookie('jwt',{
+            httpOnly: true,
+        })
+    } else {
+        res.clearCookie('jwt',{
+            httpOnly: true,
+            secure: true,   // se estiver em produção com HTTPS
+        })
+    }
+
+    res.locals.loggedin = false
+    res.locals.accountData = {}
+
+    req.flash('notice', 'You\'re discconected.')
+    res.render("./index", {
+        title: 'Welcome to CSE Motors!',
+        nav,
+        errors: null,
+    })
+}
+
+
+module.exports = { buildLogin, buildRegister, registerAccount, accountLogin, buildAccountManagement, buildEdit, editAccount, editPassword, loggout }

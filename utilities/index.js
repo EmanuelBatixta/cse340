@@ -107,6 +107,8 @@ Util.buildClassificationList = async function (classification_id = null) {
 * Middleware to check token validity
 **************************************** */
 Util.checkJWTToken = (req, res, next) => {
+  res.locals.loggedin = false
+
  if (req.cookies.jwt) {
   jwt.verify(
    req.cookies.jwt,
@@ -118,7 +120,8 @@ Util.checkJWTToken = (req, res, next) => {
      return res.redirect("/account/login")
     }
     res.locals.accountData = accountData
-    res.locals.loggedin = 1
+
+    res.locals.loggedin = true
     next()
    })
  } else {
@@ -129,14 +132,34 @@ Util.checkJWTToken = (req, res, next) => {
 /* ****************************************
  *  Check Login
  * ************************************ */
- Util.checkLogin = (req, res, next) => {
+Util.checkLogin = (req, res, next) => {
   if (res.locals.loggedin) {
     next()
   } else {
     req.flash("notice", "Please log in.")
     return res.redirect("/account/login")
   }
- }
+}
+
+Util.isClient = (req, res, next) =>{
+    const fullAcess = ['Admin', 'Employee']
+    jwt.verify(
+    req.cookies.jwt,
+    process.env.ACCESS_TOKEN_SECRET,
+    function (err, accountData) {
+        if (err || !accountData) {
+            req.flash("Sorry, you don't have permission to manage the inventory")
+            return res.redirect("/account/");
+        }
+        if(fullAcess.includes(accountData.account_type)){
+            next()
+        } else {
+            return res.redirect("/account/")
+        }
+    })
+}
+
+
 
 /* ****************************************
  * Middleware For Handling Errors

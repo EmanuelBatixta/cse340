@@ -10,6 +10,10 @@ router.get("/type/:classificationId", utilities.handleErrors(invController.build
 
 router.get("/detail/:inv_id", utilities.handleErrors(invController.buildDetailsById));
 
+router.use(utilities.checkLogin)
+
+router.use(utilities.isClient)
+
 router.get("/", utilities.handleErrors(invController.buildManagement));
 
 router.get("/new/classification", utilities.handleErrors(invController.buildNewClassification));

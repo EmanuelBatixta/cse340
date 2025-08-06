@@ -1,0 +1,47 @@
+<h1><%- title %></h1>
+<%- messages() %>
+<% if (errors) { %>
+    <ul class="notice">
+        <% errors.array().forEach(error => { %>
+            <li><%= error.msg %></li>
+        <%  }) %>
+    </ul>
+<% } %>
+<form action="/account/edit/" method="post" id="accountForm">
+    <label for="account_firstname">
+       First Name:
+        <input type="text" name="account_firstname" id="account_firstname" placeholder="John" required value="<%= locals.accountData.account_firstname %>" minlength="3">
+    </label>
+
+    <label for="account_lastname">
+       First Name:
+        <input type="text" name="account_lastname" id="account_lastname" placeholder="Smith" required value="<%= locals.accountData.account_lastname %>" minlength="3">
+    </label>
+
+    </label>
+
+    <label for="account_email">
+        Email Adress:
+        <input type="email" name="account_email" id="account_email" placeholder="example@example.com" required value="<%= locals.accountData.account_email %>">
+    </label>
+
+    <button class="update-btn"><%- title %></button>
+    <input type="hidden" name="account_id"
+    <% if(locals.accountData.account_id) { %> value="<%= locals.accountData.account_id %>"
+    <% } %>>
+</form>
+
+<form action="/account/edit/password" method="post" id="passwordForm">
+    <label for="account_password">
+        Password:
+        <input type="password" name="account_password" id="account_password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" required>
+    </label>
+
+    <button class="update-btn">Edit Password</button>
+    <input type="hidden" name="account_id"
+    <% if(locals.accountData.account_id) { %> value="<%= locals.accountData.account_id %>"
+    <% } %>>
+</form>
+
+<script src="../../js/edit.js"></script>
+
