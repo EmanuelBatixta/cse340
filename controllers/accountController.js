@@ -141,36 +141,35 @@ async function buildEdit(req, res) {
 async function editAccount(req, res) {
     let nav = await utilities.getNav()
     const { account_firstname, account_lastname, account_email, account_id } = req.body
+    const existEmail = await accountModel.getAccountByEmail(account_email)
+    if(account_id === existEmail.account_id){
+        req.flash('notice', 'Failed edit account, this email is already in use.')
+        res.status(500).render("./account/edit", {
+            title: 'Edit account',
+            nav,
+            errors: null,
+        })
 
-    if(!accountModel.getAccountByEmail(account_email)){
+    } else {
+
         const editResult = await accountModel.updateAccount(account_id, account_firstname, account_lastname, account_email)
 
         if(editResult){
         req.flash('notice', 'Account edited sucessfully.')
-        res.status(201).render("./account/", {
+        res.status(201).render("./account/management", {
             title: 'Account Management',
             nav,
             errors: null,
         })
         } else {
             req.flash('notice', 'Failed edit account.')
-            res.status(500).render("./account/", {
+            res.status(500).render("./account/edit", {
                 title: 'Edit account',
                 nav,
                 errors: null,
             })
         }
-
-    } else {
-
-        req.flash('notice', 'Failed edit account.')
-        res.status(500).render("./account/", {
-            title: 'Edit account',
-            nav,
-            errors: null,
-        })
     }
-
 }
 
 async function editPassword(req, res) {
@@ -180,9 +179,9 @@ async function editPassword(req, res) {
     let hashedPassword
     try {
         // regular password and cost (salt is generated automatically)
-        hashedPassword = await bcrypt.hashSync(account_password, 10)
+        hashedPassword = bcrypt.hashSync(account_password, 10)
     } catch (error) {
-        req.flash("notice", 'Sorry, there was an error processing the registration.')
+        req.flash("notice", 'Failed edit password.')
         res.status(500).render("./account/register", {
         title: "Register",
         nav,
@@ -191,9 +190,9 @@ async function editPassword(req, res) {
     }
 
     const editResult = await accountModel.updatePasswod(account_id, hashedPassword)
-
+    console.log(editResult)
     if(editResult){
-        req.flash('notice', 'Password edited sucessfully.')
+        req.flash('notice', 'Password edit sucessfully.')
         res.status(201).render("./account/management", {
             title: 'Account Management',
             nav,

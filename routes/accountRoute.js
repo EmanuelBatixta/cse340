@@ -27,8 +27,7 @@ router.get("/", utilities.handleErrors(ctrl.buildAccountManagement))
 
 router.get("/management/:account_id", utilities.handleErrors(ctrl.buildEdit))
 
-router.post("/edit/",
-    regValidate.editAccountRules,
+router.post("/edit/account",
     utilities.handleErrors(ctrl.editAccount)
 )
 
@@ -38,6 +37,7 @@ router.post("/edit/password",
 )
 
 router.get("/loggout",
+    regValidate.editAccountRules,
     utilities.handleErrors(ctrl.loggout)
 )
 

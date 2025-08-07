@@ -7,7 +7,7 @@
         <%  }) %>
     </ul>
 <% } %>
-<form action="/account/edit/" method="post" id="accountForm">
+<form action="/account/edit/account" method="post" id="accountForm">
     <label for="account_firstname">
        First Name:
         <input type="text" name="account_firstname" id="account_firstname" placeholder="John" required value="<%= locals.accountData.account_firstname %>" minlength="3">

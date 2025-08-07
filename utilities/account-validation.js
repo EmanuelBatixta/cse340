@@ -126,7 +126,7 @@ validate.editAccountRules = () => {
         .trim()
         .escape()
         .notEmpty()
-        .isLength({ min: 1 })
+        .isLength({ min: 3 })
         .withMessage("Please provide a first name."), // on error this message is sent.
 
       // lastname is required and must be string
@@ -134,7 +134,7 @@ validate.editAccountRules = () => {
         .trim()
         .escape()
         .notEmpty()
-        .isLength({ min: 2 })
+        .isLength({ min: 3 })
         .withMessage("Please provide a last name."), // on error this message is sent.
 
       // valid email is required and cannot already exist in the DB
@@ -145,12 +145,7 @@ validate.editAccountRules = () => {
       .isEmail()
       .normalizeEmail() // refer to validator.js docs
       .withMessage("A valid email is required.")
-      .custom(async (account_email) => {
-        const emailExists = await accountModel.checkExistingEmail(account_email)
-            if (emailExists){
-                throw new Error("Email exists. Please log in or use different email");
-            }
-        }),
+
     ]
 }
 

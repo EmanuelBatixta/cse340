@@ -49,9 +49,9 @@ async function getAccountById (account_id) {
 
 async function updateAccount (account_id, account_firstname, account_lastname, account_email) {
     try{
-        const result = await pool.query('UPDATE public.account SET account_firstname = $1, account_lastname = $2, account_email = $3, WHERE account_id = $4',[account_firstname, account_lastname, account_email, account_id])
-        
-        return await result.rows[0]
+        const result = await pool.query('UPDATE public.account SET account_firstname = $1, account_lastname = $2, account_email = $3 WHERE account_id = $4 RETURNING *',[account_firstname, account_lastname, account_email, account_id])
+
+        return result.rows[0]
     } catch (error) {
         console.error("update error: " + error)
     }
@@ -59,7 +59,7 @@ async function updateAccount (account_id, account_firstname, account_lastname, a
 
 async function updatePasswod (account_id, account_password) {
     try{
-        const result = await pool.query('UPDATE public.account SET account_password = $1 WHERE account_id = $2',[account_password, account_id])
+        const result = await pool.query('UPDATE account SET account_password = $1 WHERE account_id = $2 RETURNING *',[account_password, account_id])
 
         return await result.rows[0]
     } catch (error) {

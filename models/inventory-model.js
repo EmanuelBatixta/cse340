@@ -92,5 +92,5 @@ async function deleteInventory(inv_id) {
         console.error("Delete Inventory error: " + error)
     }
 }
-
+ 
 module.exports = { getClassifications, getInventoryByClassificationId, getDetailsById, addClassification, addInventoryItem, getClassificationById, updateInventory, deleteInventory }
