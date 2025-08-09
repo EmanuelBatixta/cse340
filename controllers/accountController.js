@@ -118,6 +118,9 @@ async function accountLogin(req, res) {
   }
 }
 
+/************************************
+ * The process to render the main of account
+ ************************************/
 async function buildAccountManagement(req, res) {
     let nav = await utilities.getNav()
 
@@ -128,6 +131,9 @@ async function buildAccountManagement(req, res) {
     })
 }
 
+/************************************
+ * The pocess to open the view of edit account
+ ************************************/
 async function buildEdit(req, res) {
     let nav = await utilities.getNav()
 
@@ -138,13 +144,18 @@ async function buildEdit(req, res) {
     })
 }
 
+/************************************
+ * The pocess to update account information
+ ************************************/
 async function editAccount(req, res) {
     let nav = await utilities.getNav()
     const { account_firstname, account_lastname, account_email, account_id } = req.body
     const existEmail = await accountModel.getAccountByEmail(account_email)
-    if(account_id === existEmail.account_id){
+    delete existEmail.account_password
+    if(existEmail && existEmail.account_id.toString() !== account_id){
+
         req.flash('notice', 'Failed edit account, this email is already in use.')
-        res.status(500).render("./account/edit", {
+        res.status(400).render("./account/edit", {
             title: 'Edit account',
             nav,
             errors: null,
@@ -153,17 +164,27 @@ async function editAccount(req, res) {
     } else {
 
         const editResult = await accountModel.updateAccount(account_id, account_firstname, account_lastname, account_email)
+        delete editResult.account_password
+        console.log(editResult)
 
         if(editResult){
-        req.flash('notice', 'Account edited sucessfully.')
-        res.status(201).render("./account/management", {
-            title: 'Account Management',
-            nav,
-            errors: null,
-        })
+            const accessToken = jwt.sign(editResult, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 })
+            if(process.env.NODE_ENV === 'development') {
+                res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
+            } else {
+                res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
+            }
+
+            req.flash('notice', 'Account edited sucessfully.')
+            res.status(201).render("./account/management", {
+                title: 'Account Management',
+                nav,
+                accountData: editResult,
+                errors: null,
+            })
         } else {
             req.flash('notice', 'Failed edit account.')
-            res.status(500).render("./account/edit", {
+            res.status(400).render("./account/edit", {
                 title: 'Edit account',
                 nav,
                 errors: null,
@@ -172,6 +193,9 @@ async function editAccount(req, res) {
     }
 }
 
+/************************************
+ * The pocess to update account password
+ ************************************/
 async function editPassword(req, res) {
     let nav = await utilities.getNav()
     const { account_password, account_id } = req.body
@@ -190,7 +214,6 @@ async function editPassword(req, res) {
     }
 
     const editResult = await accountModel.updatePasswod(account_id, hashedPassword)
-    console.log(editResult)
     if(editResult){
         req.flash('notice', 'Password edit sucessfully.')
         res.status(201).render("./account/management", {
@@ -208,6 +231,9 @@ async function editPassword(req, res) {
     }
 }
 
+/************************************
+ * The pocess to loggout account method Post
+ ************************************/
 async function loggout(req, res) {
     let nav = await utilities.getNav()
 
@@ -233,5 +259,69 @@ async function loggout(req, res) {
     })
 }
 
+/************************************
+ * The pocess to delete account method Get
+ ************************************/
+async function buildDeleteAccount(req, res) {
+    let nav = await utilities.getNav()
 
-module.exports = { buildLogin, buildRegister, registerAccount, accountLogin, buildAccountManagement, buildEdit, editAccount, editPassword, loggout }
+    res.render("./account/delete-confirm",{
+        title: "Confirm Account Deletion",
+        nav,
+        errors: null,
+    })
+}
+
+/************************************
+ * The pocess to delete account method Post
+ ************************************/
+
+async function deleteAccount(req, res) {
+    let nav = await utilities.getNav()
+    const { account_email, account_password } = req.body
+    const accountData = await accountModel.getAccountByEmail(account_email)
+
+    if(await bcrypt.compare(account_password, accountData.account_password)){
+        const deleteResult = await accountModel.deleteAccount(account_email)
+        if(deleteResult) {
+            if(process.env.NODE_ENV === 'development'){
+                res.clearCookie('jwt',{
+                    httpOnly: true,
+                })
+            } else {
+                res.clearCookie('jwt',{
+                    httpOnly: true,
+                    secure: true,   // se estiver em produção com HTTPS
+                })
+            }
+
+            res.locals.loggedin = false
+            res.locals.accountData = {}
+
+            req.flash('notice', 'Account deleted sucesfully.')
+            res.status(201).render("index",{
+            title: 'Welcome to CSE Motors!',
+            nav,
+            errors: null,
+        })
+        } else {
+            req.flash('notice', 'Account deleted sucesfully.')
+            res.status(201).render("index",{
+                title: 'Welcome to CSE Motors!',
+                nav,
+                errors: null,
+            })
+        }
+
+    } else {
+        req.flash('notice', 'Invalid Password.')
+        res.status(400).render("account/delete-confirm", {
+            title: 'Confirm Account Deletion',
+            nav,
+            errors: null,
+        })
+    }
+}
+
+
+module.exports = { buildLogin, buildRegister, registerAccount, accountLogin, buildAccountManagement, buildEdit, editAccount, editPassword, loggout, deleteAccount, buildDeleteAccount }

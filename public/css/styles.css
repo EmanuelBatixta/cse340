@@ -7,6 +7,8 @@
     --valid-color: #d9ffea;
     --invalid-color: #ffe2dc;
     --notice-color: #ee4646;
+
+    --border-rad: .5rem;
 }
 
 /******* Change Box Model ***************/
@@ -52,8 +54,7 @@ header a{
     font-weight: light;
     font-style: italic;
     text-decoration: underline;
-    color: var(--btn-hover-color);
-    opacity: .5;
+    color: var(--btn-color);
     margin-top: -.4rem;
 }
 
@@ -95,10 +96,18 @@ h3{
 
 #messages,
 .notice{
-    width: 80%;
+    width: 85%;
     margin: 0 auto;
     padding: .5rem;
     color: var(--notice-color);
+}
+
+.warning{
+    width: 85%;
+    margin: 0 auto;
+    padding: .5rem;
+    color: var(--invalid-color);
+    font-weight: bold;
 }
 
 .hero{
@@ -399,6 +408,27 @@ input:required:valid {
 #inventoryDisplay tbody tr:nth-child(even){
     background: #ddedff;
 }
+
+#deleteSection{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+
+#deleteSection a{
+    text-decoration: none;
+    font-size: 1.1rem;
+    color: white;
+    background: var(--notice-color);
+    padding: .5rem;
+    border-radius: var(--border-rad);
+    width: 30%;
+}
+
+#deleteSection a:hover{
+    opacity: .7;
+}
+
 
 #footer{
     margin-top: .5rem;

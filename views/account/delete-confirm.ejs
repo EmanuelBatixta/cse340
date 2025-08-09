@@ -1,0 +1,22 @@
+<form action="/account/delete" method="post" id="deleteAccount">
+    <h1><%- title %></h1>
+    <%- messages() %>
+    <% if (errors) { %>
+        <ul class="notice">
+            <% errors.array().forEach(error => { %>
+                <li><%= error.msg %></li>
+            <%  }) %>
+        </ul>
+    <% } %>
+
+    <label for="account_password">
+        To delete account write your password:
+        <input type="password" name="account_password" id="account_password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$">
+    </label>
+
+    <p class="warning">Confirm Deletion - The delete is permanent.</p>
+    <button class="delete-btn">Delete account</button>
+    <input type="hidden" name="account_email"
+    <% if(locals.accountData.account_email) { %> value="<%= locals.accountData.account_email %>"
+    <% } %>>
+</form>

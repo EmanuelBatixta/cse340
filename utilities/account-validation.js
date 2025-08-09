@@ -149,6 +149,25 @@ validate.editAccountRules = () => {
     ]
 }
 
+validate.checkEditData = async (req, res, next) => {
+  const { account_firstname, account_lastname, account_email } = req.body
+  let errors = []
+  errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    res.render("account/login", {
+      errors,
+      title: "Login",
+      nav,
+      account_firstname,
+      account_lastname,
+      account_email
+    })
+    return
+  }
+  next()
+}
+
 validate.editPasswordRules = () => {
     return [
         body("account_password")
@@ -164,5 +183,22 @@ validate.editPasswordRules = () => {
             .withMessage("Password does not meet requirements."),
     ]
 }
+
+validate.deleteValidation = () => {
+    return[
+        body("account_password")
+            .trim()
+            .notEmpty()
+            .isStrongPassword({
+            minLength: 12,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1,
+            })
+            .withMessage("Password does not meet requirements."),
+    ]
+}
+
 
 module.exports = validate

@@ -17,7 +17,6 @@ router.post("/register",
 router.post("/login",
     regValidate.loginRules(),
     regValidate.checkLoginData,
-    ctrl.accountLogin,
     utilities.handleErrors(ctrl.accountLogin)
 )
 
@@ -28,17 +27,27 @@ router.get("/", utilities.handleErrors(ctrl.buildAccountManagement))
 router.get("/management/:account_id", utilities.handleErrors(ctrl.buildEdit))
 
 router.post("/edit/account",
+    regValidate.editAccountRules(),
+    regValidate.checkEditData,
     utilities.handleErrors(ctrl.editAccount)
 )
 
 router.post("/edit/password",
-    regValidate.editPasswordRules,
+    regValidate.editPasswordRules(),
     utilities.handleErrors(ctrl.editPassword)
 )
 
 router.get("/loggout",
-    regValidate.editAccountRules,
     utilities.handleErrors(ctrl.loggout)
+)
+
+router.get("/delete/",
+    utilities.handleErrors(ctrl.buildDeleteAccount)
+)
+
+router.post("/delete/",
+    regValidate.deleteValidation(),
+    utilities.handleErrors(ctrl.deleteAccount)
 )
 
 module.exports = router

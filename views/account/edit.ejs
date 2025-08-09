@@ -7,6 +7,7 @@
         <%  }) %>
     </ul>
 <% } %>
+<h2>Edit account info</h2>
 <form action="/account/edit/account" method="post" id="accountForm">
     <label for="account_firstname">
        First Name:
@@ -14,10 +15,8 @@
     </label>
 
     <label for="account_lastname">
-       First Name:
+       Last Name:
         <input type="text" name="account_lastname" id="account_lastname" placeholder="Smith" required value="<%= locals.accountData.account_lastname %>" minlength="3">
-    </label>
-
     </label>
 
     <label for="account_email">
@@ -25,23 +24,36 @@
         <input type="email" name="account_email" id="account_email" placeholder="example@example.com" required value="<%= locals.accountData.account_email %>">
     </label>
 
-    <button class="update-btn"><%- title %></button>
+    <button class="update-btn" id="update-account" disabled><%- title %></button>
     <input type="hidden" name="account_id"
     <% if(locals.accountData.account_id) { %> value="<%= locals.accountData.account_id %>"
     <% } %>>
 </form>
 
+<h2>Edit Password</h2>
 <form action="/account/edit/password" method="post" id="passwordForm">
     <label for="account_password">
         Password:
         <input type="password" name="account_password" id="account_password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" required>
     </label>
-
+    <div class="patterns hide">
+        <ul>
+            <li id="charPattern">At least 12 characters</li>
+            <li id="numPattern">At least one number</li>
+            <li id="lowPattern">One must be a lowercase letter</li>
+            <li id="capPattern">One must be a capital letter</li>
+            <li id="spePattern">One must be a special character</li>
+        </ul>
+    </div>
     <button class="update-btn">Edit Password</button>
     <input type="hidden" name="account_id"
     <% if(locals.accountData.account_id) { %> value="<%= locals.accountData.account_id %>"
     <% } %>>
 </form>
+
+<% if(locals.accountData.account_type === "Client"){ %>
+    <div id="deleteSection"><a href="/account/delete">Delete account</a></div>
+<% } %>
 
 <script src="../../js/edit.js"></script>
 

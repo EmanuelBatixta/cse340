@@ -21,3 +21,10 @@ passInput.addEventListener("keyup", () => {
     capPattern.classList.toggle("validPattern", /[A-Z]/.test(passInput.value)); //has a capital letter?
     spePattern.classList.toggle("validPattern", /[^a-zA-Z0-9]/.test(passInput.value)); //has a special char?
 });
+
+const form = document.querySelector("#accountForm")
+    form.addEventListener("change", function () {
+      const updateBtn = document.querySelector("#update-account")
+      updateBtn.removeAttribute("disabled")
+})
+
